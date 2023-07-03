@@ -42,18 +42,6 @@
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li>
-      <a href="articles/set-operations.html">Set operations</a>
-    </li>
-  </ul>
-</li>
       </ul>
 <ul class="nav navbar-nav navbar-right"></ul>
 </div>
@@ -74,6 +62,63 @@
 <div class="section level2">
 <h2 id="motivation">Motivation<a class="anchor" aria-label="anchor" href="#motivation"></a>
 </h2>
+<p>Package extends <code>base</code> set operations for lists and offers more accurate comparison of nested lists.</p>
+</div>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p>Package available to install from <code>CRAN</code> and from GitHub.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"rops"</span><span class="op">)</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"gogonzo/rops"</span><span class="op">)</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="diffing">diffing<a class="anchor" aria-label="anchor" href="#diffing"></a>
+</h3>
+<p>In comparison with other common diff argorithms based on <a href="https://en.wikipedia.org/wiki/Longest_common_subsequence_problem" class="external-link">LCS</a> <code>rops</code> proposes simpler and more accurate solution based on recursive comparison between list elements which have the same name. If one of the list is unnamed then <code>rops</code> can’t determine if the elements are equivalent and assumes they differ entirely. Package provides universal <code>diffs</code> method to compare two lists and its nested elements. Printed result indicates differences by the color. <code>rops</code> doesn’t mind order of the named elements, which means that two lists with the same elements sorted differently are concluded the same.</p>
+<p><code>{r, eval=FALSE} library(rops) x &lt;- list(   a = list(NULL),    b = list(ba = list(baa = list(NULL)), bb = list(bbb = list(NULL))) ) y &lt;- list(   b = list(ba = list(baa = list(NULL)), bb = list(bb = list(bbc = list(NULL)))),   c = list(NULL) ) diffs(x, y)</code></p>
+</div>
+<div class="section level3">
+<h3 id="set_equal">set_equal<a class="anchor" aria-label="anchor" href="#set_equal"></a>
+</h3>
+<p>To simply compare if the lists are equal use <code>set_equal</code>. Lists are considered equal if all their equivalent elements are equal.</p>
+<p><code>{r, eval=FALSE} set_equal(x, y)</code></p>
+</div>
+<div class="section level3">
+<h3 id="set_union">set_union<a class="anchor" aria-label="anchor" href="#set_union"></a>
+</h3>
+<p>To combine two lists into one use <code>set_union</code>. Final output contains all elements from <code>x</code> and <code>y</code>. Please note that at vectors are also combined using <code><a href="https://rdrr.io/r/base/sets.html" class="external-link">base::union</a></code>.</p>
+<p><code>{r, eval=FALSE} set_union(x, y)</code></p>
+</div>
+<div class="section level3">
+<h3 id="set_diff">set_diff<a class="anchor" aria-label="anchor" href="#set_diff"></a>
+</h3>
+<p><code>set_diff</code> returns <code>x</code> elements which are different or doesn’t exist in <code>y</code>.</p>
+<p><code>{r, eval=FALSE} x &lt;- list(   a = list(NULL),    b = list(ba = list(baa = list(NULL)), bb = list(bbb = list(NULL))) ) y &lt;- list(   b = list(ba = list(baa = list(NULL)), bb = list(bb = list(bbc = list(NULL)))),   c = list(NULL) ) set_diff(x, y) |&gt; yaml::as.yaml() |&gt; cat()</code></p>
+</div>
+<div class="section level3">
+<h3 id="set_intersect">set_intersect<a class="anchor" aria-label="anchor" href="#set_intersect"></a>
+</h3>
+<p><code>set_intersect</code> returns elements which exist in <code>x</code> and <code>y</code> and are equal.</p>
+<p><code>{r, eval=FALSE} x &lt;- list(   a = list(NULL),    b = list(ba = list(baa = list(NULL)), bb = list(bbb = list(NULL))) ) y &lt;- list(   b = list(ba = list(baa = list(NULL)), bb = list(bb = list(bbc = list(NULL)))),   c = list(NULL) ) set_diff(x, y) |&gt; yaml::as.yaml() |&gt; cat()</code></p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="custom-conditions">Custom conditions<a class="anchor" aria-label="anchor" href="#custom-conditions"></a>
+</h2>
+<p>For more control over comparison output in nested list elements one can specify the <code>.expr</code> argument. <code>.expr</code> is any R expression which is parsed by the <code>rops</code> functions and passed deeper recursively. This means that expression is evaluated on each level of list’s depth. <code>.expr</code> is helpful for handling the exceptions. By default, two list <code>x</code> and <code>y</code> are equal if all they elements are equal. In some cases one would like to ease this requirement and consider list equal if one specific field matches. Let’s consider <code>set_diff</code> example where we want to return <code>list(zz = 1L)</code> instead of differences between element named <code>"bb"</code> in both lists.</p>
+<p><code>{r, eval=FALSE} x &lt;- list(   a = list(NULL),    b = list(ba = list(baa = list(NULL)), bb = list(bbb = list(NULL))) ) y &lt;- list(   b = list(ba = list(baa = list(NULL)), bb = list(bb = list(bbc = list(NULL)))),   c = list(NULL) ) set_diff(x, y, .expr = if (identical(.name, "bb")) return(list(zz = 1L))) |&gt; yaml::as.yaml() |&gt; cat()</code></p>
+<p>Please note that following variables are available within each recursive frame and can be used in the <code>.expr</code> call:</p>
+<ul>
+<li>
+<code>x</code> element of the <code>x</code> from the <code>parent.frame</code>.</li>
+<li>
+<code>y</code> element of the <code>y</code> from the <code>parent.frame</code>.</li>
+<li>
+<code>.depth</code> depth of the current call.</li>
+<li>
+<code>.name</code> name of the element taken from the parent.</li>
+</ul>
+<p>Please be aware that <code>.expr</code> is evaluated in each frame, this means that expression probably needs more flags to avoid too early exit:</p>
 </div>
 </div>
   </div>
