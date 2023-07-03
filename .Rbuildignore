@@ -1,0 +1,6 @@
+^renv$
+^renv\.lock$
+^renv\.ops\.Rproj$
+^\.Rproj\.user$
+^man-roxygen
+^\.github$

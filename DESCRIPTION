@@ -1,0 +1,22 @@
+Package: rops
+Title: Set operations for lists and its elements
+Version: 0.0.0.9000
+Authors@R: c(
+  person("Dawid", "Kałędkowski", email = "dawid.kaledkowski@gmail.com", comment = c(ORCID = "0000-0001-9533-457X"), role = c("aut", "cre"))
+  )
+Description: Recursive union, intersect, setdiff for the lists and its elements.
+License: Apache License 2.0
+Encoding: UTF-8
+Imports:
+  methods,
+  rlang
+Suggests:
+  covr,
+  crayon,
+  knitr,
+  lifecycle,
+  testthat,
+  yaml
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+VignetteBuilder: knitr
