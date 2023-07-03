@@ -41,7 +41,7 @@
     }
   } else {
     if (length(x) == 0) {
-      "[]"
+      " []"
     } else if (.is_name) {
       sprintf("\n%s%s:", indent, x)
     } else if (length(x) > 1) {
