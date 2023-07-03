@@ -47,6 +47,11 @@ setMethod("diffs", signature(x = "NULL", y = "ANY"), function(x, y, .depth = 0L,
 })
 
 #' @rdname diffs
+setMethod("diffs", signature(x = "NULL", y = "NULL"), function(x, y, .depth = 0L, .name = NULL, .type = 0L) {
+  .print_type(x, .depth = .depth, .type = .type)
+})
+
+#' @rdname diffs
 setMethod("diffs", signature(x = "atomic", y = "atomic"), function(x, y, .depth = 0L, .name = NULL, .type = 0L) {
   if (!is.null(names(x)) || !is.null(names(y))) {
     warning("rops doesn't support comparison between named atomics")

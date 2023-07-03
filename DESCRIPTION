@@ -15,6 +15,7 @@ Suggests:
   crayon,
   knitr,
   lifecycle,
+  rmarkdown,
   testthat,
   yaml
 Roxygen: list(markdown = TRUE)

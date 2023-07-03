@@ -7,6 +7,7 @@
 \alias{diffs,NULL,list-method}
 \alias{diffs,ANY,NULL-method}
 \alias{diffs,NULL,ANY-method}
+\alias{diffs,NULL,NULL-method}
 \alias{diffs,atomic,atomic-method}
 \alias{diffs,list,list-method}
 \title{Print differences between two objects}
@@ -20,6 +21,8 @@ diffs(x, y, .depth = 0L, .name = NULL, .type = 0L)
 \S4method{diffs}{ANY,`NULL`}(x, y, .depth = 0L, .name = NULL, .type = 0L)
 
 \S4method{diffs}{`NULL`,ANY}(x, y, .depth = 0L, .name = NULL, .type = 0L)
+
+\S4method{diffs}{`NULL`,`NULL`}(x, y, .depth = 0L, .name = NULL, .type = 0L)
 
 \S4method{diffs}{atomic,atomic}(x, y, .depth = 0L, .name = NULL, .type = 0L)
 
